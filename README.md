@@ -18,7 +18,7 @@ To detect nuclei in your own image of interest just follow the notebook XXXXXXXX
 
 Please note, we mostly tested:
 1) DAPI nuclear stains
-2) 40-60X objectives ()
+2) 40-60X objectives (Leica SP8/ Zeiss 710)
 3) Size of image should be a multiple of 256 (256, 512, 1024, 2084, ...)
 
 
@@ -30,20 +30,24 @@ If you crop your image to a 256x256 pixels square, these some typical images the
 
 ## Details 
 
+Access to GPU. 
+
 Options:
 
+A) In case of images larger than 256 pixels:
 --stitch=
-In case of images larger than 256 pixels:
 - no stitiching
 - stitching v1 (overkill and slow)
 - stitching v2 (hopefully better than v1)
 - stitching touching polygons (faster but perhaps less accurate?)
 
 B) Overlayed image with segmentation or just output masks (faster)
+
 --overlay=True/False
 
 
 C) Giving it tif 3D stack. Additionaly joinning nuclei across z.
+
 --3D=True/False
 
 [further options: XXXXXXXXXX]
