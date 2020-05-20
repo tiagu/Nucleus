@@ -35,6 +35,7 @@ Access to GPU.
 Options:
 
 A) In case of images larger than 256 pixels:
+
 --stitch=
 - no stitiching
 - stitching v1 (overkill and slow)
@@ -46,7 +47,7 @@ B) Overlayed image with segmentation or just output masks (faster)
 --overlay=True/False
 
 
-C) Giving it tif 3D stack. Additionaly joinning nuclei across z.
+C) If you dare to attempt a tif 3D stack as input. Additionaly joinning nuclei across z.
 
 --3D=True/False
 
