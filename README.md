@@ -4,6 +4,14 @@ Uses Detectron2 to detect single nuclei in crowded immunofluorescence images.
 ## Data used
 This table shows the main datasets used to train and validate Detectron. These are available at XXXXXXXXXX.
 
+|   | #images  |  #instances | size  | comments  |
+|---|---|---|---|---|
+nucleus_train |	6 |	221 | 256*256
+nucleus_val | 4 | 141 | 256*256
+kromp_ 2019 | 52 | 1,704 | 640*512
+segm_512 | 3 | 566 | 512*512
+mouse_SC | X | X | 256*256
+|   |   |   |   |   |
 
 ## How to
 To detect nuclei in your own image of interest just follow the notebook XXXXXXXXXX. 
