@@ -5,9 +5,6 @@ Uses Detectron2 to detect single nuclei in crowded immunofluorescence images.
 This table shows the main datasets used to train and validate Detectron. These are available at XXXXXXXXXX.
 
 
-
-
-
 ## How to
 To detect nuclei in your own image of interest just follow the notebook XXXXXXXXXX. 
 
@@ -21,19 +18,25 @@ If you crop your image to a 256x256 pixels square, these some typical images the
 
 
 3x3 image grid
+
+
 ## Details 
 
 Options:
 
-A) In case of images larges than 256 pixels:
+--stitch=
+In case of images larger than 256 pixels:
 - no stitiching
 - stitching v1 (overkill and slow)
 - stitching v2 (hopefully better than v1)
-- stitching touching polygons (faster but perhaps less accurate)
+- stitching touching polygons (faster but perhaps less accurate?)
 
 B) Overlayed image with segmentation or just output masks (faster)
+--overlay=True/False
+
 
 C) Giving it tif 3D stack. Additionaly joinning nuclei across z.
+--3D=True/False
 
 [further options: XXXXXXXXXX]
 
@@ -41,7 +44,7 @@ C) Giving it tif 3D stack. Additionaly joinning nuclei across z.
 ## To do
 
 - stitching v2
-- stitching touching polygons
+- stitching touching polygons [this does not generate additional images at the middle of boundaries. Just scans edges and merges nuclei if their areas intersect sufficiently with a specificed margin.]
 - 3D stacks
 
 
