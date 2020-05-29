@@ -1,6 +1,18 @@
 # Nucleus
 Uses Detectron2 to detect single nuclei in crowded immunofluorescence images.
 
+## How to
+To detect nuclei in your own image of interest just follow the notebook [Nucleus_Predict](https://github.com/tiagu/Nucleus/blob/master/Nucleus_Predict.ipynb?flush_cache=true).
+
+Please note, we mostly tested:
+1) DAPI nuclear stains
+2) 40-60X objectives (Leica SP8/ Zeiss LSM710)
+3) Size of the images should be a multiple of 256 (256, 512, 1024, 2084, ...)
+
+Ideally, a 256x256 pixels square cropped from your images should looks similar to images the network is used to predict. Here are some:
+
+< row of 3 images here >
+
 ## Data used
 This table shows the main datasets used to train and validate Detectron. These are available at XXXXXXXXXX.
 
@@ -13,20 +25,7 @@ segm_512 | 3 | 566 | 512*512 | in vitro hESC assay
 SC_sections | X | X | 256*256 | Spinal Cord sections
 |   |   |   |   |   |
 
-## How to
-To detect nuclei in your own image of interest just follow the notebook [Nucleus_Predict](https://github.com/tiagu/Nucleus/blob/master/Nucleus_Predict.ipynb?flush_cache=true).
 
-
-Please note, we mostly tested:
-1) DAPI nuclear stains
-2) 40-60X objectives (Leica SP8/ Zeiss 710)
-3) Size of image should be a multiple of 256 (256, 512, 1024, 2084, ...)
-
-
-If you crop your image to a 256x256 pixels square, these some typical images the network is used to predict:
-
-
-3x3 image grid
 
 
 ## Details 
