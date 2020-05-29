@@ -6,15 +6,16 @@ This table shows the main datasets used to train and validate Detectron. These a
 
 |   | #images  |  #instances | size  | comments  |
 |---|---|---|---|---|
-nucleus_train |	6 |	221 | 256*256
-nucleus_val | 4 | 141 | 256*256
-kromp_ 2019 | 52 | 1,704 | 640*512
-segm_512 | 3 | 566 | 512*512
-mouse_SC | X | X | 256*256
+nucleus_train |	6 |	221 | 256*256 | in vitro hESC assay
+nucleus_val | 4 | 141 | 256*256 | in vitro hESC assay
+kromp_ 2019 | 52 | 1,704 | 640*512 | curated from Kromp et al. (2019)
+segm_512 | 3 | 566 | 512*512 | in vitro hESC assay
+SC_sections | X | X | 256*256 | Spinal Cord sections
 |   |   |   |   |   |
 
 ## How to
-To detect nuclei in your own image of interest just follow the notebook XXXXXXXXXX. 
+To detect nuclei in your own image of interest just follow the notebook [Nucleus_Predict](https://github.com/tiagu/Nucleus/blob/master/Nucleus_Predict.ipynb?flush_cache=true).
+
 
 Please note, we mostly tested:
 1) DAPI nuclear stains
@@ -36,15 +37,12 @@ Options:
 
 A) In case of images larger than 256 pixels:
 
---stitch=
 - no stitiching
 - stitching v1 (overkill and slow)
 - stitching v2 (hopefully better than v1)
 - stitching touching polygons (faster but perhaps less accurate?)
 
 B) Overlayed image with segmentation or just output masks (faster)
-
---overlay=True/False
 
 
 C) If you dare to attempt a tif 3D stack as input. Additionaly joinning nuclei across z.
