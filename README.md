@@ -6,8 +6,8 @@ To detect nuclei in your own image of interest just follow the notebook [Nucleus
 
 Please note, we mostly tested:
 1) DAPI nuclear stains
-2) Resolution of 3.5 to 6 pixels/&mu;m (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
-3) Size of the images should be a multiple of 256 (256, 512, 1024, 2084, ...)
+2) Resolutions of 3.5 to 6 pixels/&mu;m (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
+3) The size of the images should be a multiple of 256, e.g. 1024x2084.
 
 
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
@@ -30,9 +30,8 @@ SC_sections (human) | 4 | X | 256*256 | Spinal Cord sections
 SC_sections (mouse) | 6 | X | 256*256 | Spinal Cord sections
 SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
-
-Distribution of the maximum length of the nuclei in the different datasets.
-<p align="center">
+<br/><br/>
+Distribution of the maximum length of the nuclei in the different datasets.<p align="center">
 <img width="495" height="350" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
 </p>
 
