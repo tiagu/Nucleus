@@ -6,16 +6,16 @@ To detect nuclei in your own image of interest just follow the notebook [Nucleus
 
 Please note, we mostly tested:
 1) DAPI nuclear stains
-2) Resolution of 3.5 to 6 <sub>pixels / &mu;</sub> (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
+2) Resolution of 3.5 to 6 pixels/&mu; (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
 3) Size of the images should be a multiple of 256 (256, 512, 1024, 2084, ...)
-
-h<sub>&mu;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
 
 
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
 
 ![training set examples](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif)
-
+<p align="center">
+  <img width="512" height="256" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif">
+</p>
 
 
 ## Data used
@@ -31,19 +31,20 @@ SC_sections (human) | 4 | X | 256*256 | Spinal Cord sections
 SC_sections (mouse) | 6 | X | 256*256 | Spinal Cord sections
 SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
+Distribution of the maximum length of the nuclei in the different datasets.
+![training set dimensions](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png)
 
-## Details 
+
+## Details and requirements
 
 Access to GPU. 
 
-Options:
-
 A) In case of images larger than 256 pixels:
 
-- no stitiching
-- stitching v1 (overkill and slow)
-- stitching v2 (hopefully better than v1)
-- stitching touching polygons (faster but perhaps less accurate?)
+- [x] no stitiching
+- [x] stitching v1 (overkill and slow)
+- [x] stitching v2 (hopefully better than v1)
+- [ ] stitching touching polygons (faster but perhaps less accurate?)
 
 B) Overlayed image with segmentation or just output masks (faster)
 
