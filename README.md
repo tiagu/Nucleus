@@ -13,7 +13,8 @@ Please note, we mostly tested:
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
 
 <p align="center">
-  <img width="512" height="256" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif">
+  ![test image](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif){class:"img-responsive}
+  ![test image](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif){:height="100%" width="100%"}
 </p>
 
 
