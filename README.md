@@ -9,13 +9,17 @@ Please note, we mostly tested:
 2) Resolution of 3.5 to 6 pixels/\[\mu\] (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
 3) Size of the images should be a multiple of 256 (256, 512, 1024, 2084, ...)
 
+h<sub>&theta;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
+
 
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
 
-< row of 3 images here >
+![training set examples](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif)
+
+
 
 ## Data used
-This table shows the main datasets used to train and validate Detectron. These are available at XXXXXXXXXX.
+This table shows the main datasets used to train and validate Detectron2. These are available at XXXXXXXXXX.
 
 |   | #images  |  #instances | size  | comments  |
 |---|---|---|---|---|
@@ -23,10 +27,9 @@ nucleus_train |	6 |	221 | 256*256 | in vitro hESC assay
 nucleus_val | 4 | 141 | 256*256 | in vitro hESC assay
 kromp_ 2019 | 52 | 1,704 | 640*512 | curated from Kromp et al. (2019)
 segm_512 | 3 | 566 | 512*512 | in vitro hESC assay
-SC_sections | X | X | 256*256 | Spinal Cord sections
-|   |   |   |   |   |
-
-
+SC_sections (human) | 4 | X | 256*256 | Spinal Cord sections
+SC_sections (mouse) | 6 | X | 256*256 | Spinal Cord sections
+SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
 
 ## Details 
