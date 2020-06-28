@@ -6,10 +6,10 @@ To detect nuclei in your own image of interest just follow the notebook [Nucleus
 
 Please note, we mostly tested:
 1) DAPI nuclear stains
-2) Resolution of 3.5 to 6 pixels/\[\mu\] (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
+2) Resolution of 3.5 to 6 <sub>pixels / &mu;</sub> (typically with 40-60X objectives on a Leica SP8/ Zeiss LSM710)
 3) Size of the images should be a multiple of 256 (256, 512, 1024, 2084, ...)
 
-h<sub>&theta;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
+h<sub>&mu;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
 
 
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
