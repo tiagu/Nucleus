@@ -23,16 +23,17 @@ This table shows the main datasets used to train and validate Detectron2. These 
 |   | #images  |  #instances | size  | comments  |
 |---|---|---|---|---|
 nucleus_train |	6 |	221 | 256*256 | in vitro hESC assay
-nucleus_val | 4 | 141 | 256*256 | in vitro hESC assay
+nucleus_val (validation) | 4 | 141 | 256*256 | in vitro hESC assay
 kromp_ 2019 | 52 | 1,704 | 640*512 | curated from Kromp et al. (2019)
 segm_512 | 3 | 566 | 512*512 | in vitro hESC assay
 SC_sections (human) | 4 | X | 256*256 | Spinal Cord sections
 SC_sections (mouse) | 6 | X | 256*256 | Spinal Cord sections
 SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
+
 Distribution of the maximum length of the nuclei in the different datasets.
 <p align="center">
-<img width="540" height="384" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
+<img width="495" height="350" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
 </p>
 
 
