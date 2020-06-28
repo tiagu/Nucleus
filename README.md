@@ -32,7 +32,7 @@ SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
 <br/><br/>
 Distribution of the maximum length of the nuclei in the different datasets.<p align="center">
-<img width=400 src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
+<img width=420 src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
 </p>
 
 
