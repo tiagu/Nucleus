@@ -12,7 +12,6 @@ Please note, we mostly tested:
 
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
 
-![training set examples](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif)
 <p align="center">
   <img width="512" height="256" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif">
 </p>
@@ -32,7 +31,9 @@ SC_sections (mouse) | 6 | X | 256*256 | Spinal Cord sections
 SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
 Distribution of the maximum length of the nuclei in the different datasets.
-![training set dimensions](https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png)
+<p align="center">
+  <img width="180" height="128" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
+</p>
 
 
 ## Details and requirements
