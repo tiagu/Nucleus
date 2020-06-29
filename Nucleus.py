@@ -59,7 +59,10 @@ class ImageInput:
         if overlap is None:
             self.overlap=74
         else:
-            self.overlap = overlap
+            if (self.overlap%2)==0:
+                self.overlap = overlap
+            else:
+                self.overlap = overlap + 1
     
     def show_me(self):
         print(f'Input image shape: {np.shape(self.img)}') 
@@ -153,7 +156,8 @@ class ImageInput:
 
         elif how=='stitch_v2':
             print(f'Using step of {self.step}px.')
-            print(f'Using step of {self.overlap}px.')
+            print(f'Using overlap of {self.overlap}px.')
+            print(f'Splitting image in tiles...')
             tiles = self.split_image_v2()
             return tiles
 
