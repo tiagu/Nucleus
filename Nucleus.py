@@ -37,7 +37,7 @@ class ImageTile:
 
     
 class ImageInput:
-    def __init__(self, img_str, coords = None, step=None):
+    def __init__(self, img_str, coords = None, step=None, overlap= None):
         
         self.img = cv2.imread(img_str)
         self.img = 255*((self.img - np.min(self.img))/np.ptp(self.img)) # between 0-255
@@ -55,6 +55,14 @@ class ImageInput:
             self.step=256
         else:
             self.step = step
+        
+        if overlap is None:
+            self.overlap=74
+        else:
+            if (self.overlap%2)==0:
+                self.overlap = overlap
+            else:
+                self.overlap = overlap + 1
     
     def show_me(self):
         print(f'Input image shape: {np.shape(self.img)}') 
@@ -99,6 +107,36 @@ class ImageInput:
                         h_borders.append(ImageTile(self.img[ i-int(self.step/2):i+int(self.step/2) , j-int(self.step/2):j+self.step+int(self.step/2)], [i-int(self.step/2),j-int(self.step/2)], self.step))
         return h_borders
 
+    def split_image_v2(self):
+        main_tiles = []
+        for i in range(0, self.INPUT_HEIGHT, self.step):
+            for j in range(0, self.INPUT_WIDTH, self.step):
+                if i == 0:
+                    if j == 0:
+                        main_tiles.append(ImageTile(self.img[i:i+ self.step+self.overlap, j:j+ self.step+self.overlap], [i,j],  self.step ) )
+                    elif j == self.INPUT_WIDTH-self.step:
+                        main_tiles.append(ImageTile(self.img[i:i+ self.step+self.overlap, j-self.overlap:j+ self.step], [i,j-self.overlap],  self.step ) )
+                    else:
+                        main_tiles.append(ImageTile(self.img[i:i+ self.step+self.overlap, j-int(self.overlap/2):j+ self.step+int(self.overlap/2)], [i,j-int(self.overlap/2)],  self.step ) )
+                elif i == self.INPUT_HEIGHT-self.step:
+                    if j == 0:
+                        main_tiles.append(ImageTile(self.img[i-self.overlap:i+ self.step, j:j+self.step+self.overlap], [i-self.overlap,j],  self.step ) )
+                    elif j == self.INPUT_WIDTH-self.step:
+                        main_tiles.append(ImageTile(self.img[i-self.overlap:i+ self.step, j-self.overlap:j+self.step], [i-self.overlap,j-self.overlap],  self.step ) )
+                    else:
+                        main_tiles.append(ImageTile(self.img[i-self.overlap:i+ self.step, j-int(self.overlap/2):j+self.step+int(self.overlap/2)], [i-self.overlap,j-int(self.overlap/2)],  self.step ) )
+                else:
+                    if j == 0:
+                        main_tiles.append(ImageTile(self.img[i-int(self.overlap/2):i+ self.step+int(self.overlap/2), j:j+ self.step+self.overlap], [i-int(self.overlap/2),j],  self.step ) )
+                    elif j == self.INPUT_WIDTH-self.step:
+                        main_tiles.append(ImageTile(self.img[i-int(self.overlap/2):i+ self.step+int(self.overlap/2), j-self.overlap:j+ self.step], [i-int(self.overlap/2),j-self.overlap],  self.step ) )
+                    else:
+                        main_tiles.append(ImageTile(self.img[i-int(self.overlap/2):i+ self.step+int(self.overlap/2), j-int(self.overlap/2):j+ self.step+int(self.overlap/2)], [i-int(self.overlap/2),j-int(self.overlap/2)],  self.step ) )                       
+
+        return main_tiles
+    
+    
+    
     def make_tiles(self, how):
         if how=='simple':
             print(f'Using step of {self.step}px.')
@@ -117,7 +155,11 @@ class ImageInput:
             return main_tiles, vertical_tiles, horizontal_tiles
 
         elif how=='stitch_v2':
-            print("TBI...")
+            print(f'Using step of {self.step}px.')
+            print(f'Using overlap of {self.overlap}px.')
+            print(f'Splitting image in tiles...')
+            tiles = self.split_image_v2()
+            return tiles
 
         elif how=='stitch_polygons':
             print("TBI...")
@@ -139,6 +181,7 @@ class Stitcher:
         self.INPUT_HEIGHT= input_img.INPUT_HEIGHT
         self.INPUT_WIDTH = input_img.INPUT_WIDTH
         self.step   = input_img.step
+        self.overlap   = input_img.overlap
 
         self.nuclei_tally = 1
         
@@ -276,7 +319,85 @@ class Stitcher:
 
         return seg_mask.cpu().numpy(), self.nuclei_tally
 
+    def stitch_v2(self, tiles_col=None ,instances_col=None, margin= 5, offset= 0.8): #second version of stitching
 
+        if tiles_col is None:
+            print("Need lists of the image tiles.")
+        else: 
+            tiles = tiles_col
+
+        if instances_col is None:
+            print("Need lists of instances for the tiles.")
+        else:
+            masks = instances_col
+            
+        step = self.step+ self.overlap
+        
+        
+        #Create all the possible borders for each tile considerinf the overlap. This is quite dirty but its just 9 possibilities irrespective of image size (multiple of 256 of course)
+        borders = torch.zeros((self.INPUT_HEIGHT,self.INPUT_WIDTH))
+        border_list = []
+
+
+        for i in range(0,len(masks)):
+            cx, cy = tiles[i].coords[0] , tiles[i].coords[1]
+            if cx==0:
+                if cy ==0:
+                    borders[cx:cx+step, cy+step-margin:cy+step+margin]=1
+                    borders[cx+step-margin:cx+step+margin, cy:cy+step]=1
+                elif cy == self.INPUT_WIDTH -step:
+                    borders[cx:cx+step, cy-margin:cy+margin]=1
+                    borders[cx+step-margin:cx+step+margin, cy:cy+step]=1
+                else:
+                    borders[cx:cx+step, cy-margin:cy+margin]=1
+                    borders[cx:cx+step, cy+step-margin:cy+step+margin]=1
+                    borders[cx+step-margin:cx+step+margin, cy:cy+step]=1
+            if cx == self.INPUT_HEIGHT -step:
+                if cy ==0:
+                    borders[cx:cx+step, cy+step-margin:cy+step+margin]=1
+                    borders[cx-margin:cx+margin, cy:cy+step]=1
+                elif cy == self.INPUT_WIDTH -step:
+                    borders[cx:cx+step, cy-margin:cy+margin]=1
+                    borders[cx-margin:cx+margin, cy:cy+step]=1
+                else:
+                    borders[cx:cx+step, cy-margin:cy+margin]=1
+                    borders[cx:cx+step, cy+step-margin:cy+step+margin]=1
+                    borders[cx-margin:cx+margin, cy:cy+step]=1
+            else:
+                if cy ==0:
+                    borders[cx:cx+step, cy+step-margin:cy+step+margin]=1
+                    borders[cx-margin:cx+margin, cy:cy+step]=1
+                    borders[cx+step-margin:cx+step+margin, cy:cy+step]=1
+                elif cy == self.INPUT_WIDTH -step:
+                    borders[cx:cx+step, cy-margin:cy+margin]=1
+                    borders[cx-margin:cx+margin, cy:cy+step]=1
+                    borders[cx+step-margin:cx+step+margin, cy:cy+step]=1
+                else:
+                    borders[cx:cx+step, cy-margin:cy+margin]=1
+                    borders[cx:cx+step, cy+step-margin:cy+step+margin]=1
+                    borders[cx-margin:cx+margin, cy:cy+step]=1
+                    borders[cx+step-margin:cx+step+margin, cy:cy+step]=1
+            border_list.append(borders)
+            borders = torch.zeros((self.INPUT_HEIGHT,self.INPUT_WIDTH))        
+            
+        
+        #Add the nucleus for each tile into the image if they are not touching a border or repeated (in overlapping regions some might be repeated)
+        #Playing with the overlap value will reduce the number of repeated nuclei and accelerate the process
+        #A repeated nuclei will have a high overlap with an existing nuclei in the image. The threshold for this is that an 80% of the nculei size has to be overlapping 
+        #Playing with the offset in a range 70-90 does not change much. Overlap with other nuclei is minimal and differences in the same nuclei segmented in 2 different tiles are also minimal.
+        seg_mask = torch.zeros((self.INPUT_HEIGHT,self.INPUT_WIDTH),dtype=torch.int32)
+        
+        for i in range(0,len(masks)):
+            a = masks[i].pred_masks  
+            border = border_list[i]
+            for nucleus in range(0, len(a)):
+                x,y = torch.where(a[nucleus]==1) #location of new nucleus
+                if torch.max(border[x+tiles[i].coords[0] , y + tiles[i].coords[1]]) == torch.tensor(0): #add it if there is nothing
+                    if np.count_nonzero(seg_mask[x+tiles[i].coords[0] , y + tiles[i].coords[1]]) < offset * np.count_nonzero(a[nucleus]==1):
+                        seg_mask[x+tiles[i].coords[0] , y + tiles[i].coords[1]] = self.nuclei_tally
+                        self.nuclei_tally +=1
+
+        return seg_mask.cpu().numpy(), self.nuclei_tally
 
 
 

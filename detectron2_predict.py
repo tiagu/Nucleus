@@ -12,7 +12,7 @@ import detectron2.data.transforms as T
 
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file("Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml"))
-cfg.OUTPUT_DIR = './output_hyper_best_cascade_mask_rcnn_X_152_bs=256_lr=0.0025/'
+cfg.OUTPUT_DIR = './model/'
 cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")  # Let training initialize from model zoo
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
 cfg.MODEL.WEIGHTS = os.path.join(cfg.OUTPUT_DIR, "model_final.pth")
