@@ -58,7 +58,7 @@ class ImageInput:
         
         if overlap is None:
             self.overlap=74
-        else:
+        else: # ensures overlap is even
             if (self.overlap%2)==0:
                 self.overlap = overlap
             else:

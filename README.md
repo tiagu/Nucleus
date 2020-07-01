@@ -2,7 +2,7 @@
 Uses Detectron2 to detect single nuclei in crowded immunofluorescence images.
 
 ## How to
-To detect nuclei in your own image of interest just follow the notebook [Nucleus_Predict](https://github.com/tiagu/Nucleus/blob/master/Nucleus_Predict.ipynb?flush_cache=true).
+To detect nuclei in your own image of interest just follow the notebook [Nucleus_Predict](https://github.com/tiagu/Nucleus/blob/master/notebooks/Nucleus_Predict.ipynb?flush_cache=true).
 
 Please note, we mostly tested:
 1) DAPI nuclear stains
@@ -13,7 +13,7 @@ Please note, we mostly tested:
 Ideally, a 256x256 pixels square cropped from your images should look similar to the images the network was trained on. Below are some examples.
 
 <p align="center">
-  <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus-GIF.gif">
+  <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/outputs/misc/Nucleus-GIF.gif">
 </p>
 
 
@@ -32,7 +32,7 @@ SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
 <br/><br/>
 Distribution of the maximum length of the nuclei in the different datasets.<p align="center">
-<img width=420 src="https://github.com/tiagu/Nucleus/blob/master/examples/Nucleus_data_dimensions.png">
+<img width=420 src="https://github.com/tiagu/Nucleus/blob/master/outputs/misc/Nucleus_data_dimensions.png">
 </p>
 
 
