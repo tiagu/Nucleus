@@ -39,7 +39,8 @@ class ImageTile:
 class ImageInput:
     def __init__(self, img_str, coords = None, step=None, overlap= None):
         
-        self.img = cv2.imread(img_str)
+        self.img = np.stack( (img_str, img_str, img_str), axis=-1) # modified so it accepts a single channel numpy array as input
+        #self.img = cv2.imread(img_str)
         self.img = 255*((self.img - np.min(self.img))/np.ptp(self.img)) # between 0-255
         self.img = np.uint8(self.img)
         
@@ -461,9 +462,9 @@ class coco_nucleus(COCO):
                     polygons.append(Polygon(np_poly))
                     color.append(c)
 
-            p = PatchCollection(polygons, facecolor=color, linewidths=0, alpha=0.2)
+            p = PatchCollection(polygons, facecolor=color, linewidths=0, alpha=0.1)
             ax.add_collection(p)
-            p = PatchCollection(polygons, facecolor='none', edgecolors=color, linewidths=1.5, alpha=0.8)
+            p = PatchCollection(polygons, facecolor='none', edgecolors=color, linewidths=1, alpha=0.6)
             ax.add_collection(p)
         elif datasetType == 'captions':
             for ann in anns:
