@@ -10,7 +10,7 @@ Please note, we mostly tested:
 3) The size of the images should be a multiple of 128, e.g. 1024x2084.
 
 
-Ideally, a 256x256 pixels crop from your images should look similar to the images the network was trained on. See below some examples.
+Ideally, a 256x256 pixels crop of your images should look similar to the images the network was trained on. See below some examples.
 
 <p align="center">
   <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/outputs/misc/Nucleus-GIF.gif">
