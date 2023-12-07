@@ -11,11 +11,11 @@ import detectron2.data.transforms as T
 
 def detectron_init(model):
     if model=='invitro':
-        model_dir='/camp/lab/briscoej/working/tiago/Nucleus/models/micropatterns/'
+        model_dir='/camp/home/ritot/home/users/ritot/Nucleus/models/micropatterns/'
         config_fn='Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml'
     elif model=='SC_sections':
-        model_dir='/camp/lab/briscoej/working/tiago/Nucleus/models/SC_sections/'
-        config_fn='Misc/mask_rcnn_X_101_32x8d_FPN_3x.yaml'
+        model_dir='/camp/home/ritot/home/users/ritot/Nucleus/models/SC_sections/'
+        config_fn='COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml'
     else:
         return("Error: specify model to use by the predictor.")
     

@@ -1,3 +1,8 @@
+# Nucleus 2022.04
+# Tiago Rito, The Francis Crick Institute
+#
+#
+# general functions to predict images: predictor, stitching, overlay with COCO
 import numpy as np
 import matplotlib.pylab as plt
 import cv2

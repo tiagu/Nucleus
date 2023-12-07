@@ -14,8 +14,6 @@ from tqdm import tqdm_notebook
 from multiprocessing import Pool
 from multiprocessing import cpu_count
 import timeit
-from skimage import io
-
 
 from functools import partial
 
@@ -146,31 +144,14 @@ def coco_output(ROOT_DIR = None, image_files=None, z_slice=None, output=None):
     segmentation_id = 1 # these do not restart for each image... unique identifier in all json
 
     #
-    #image_files = np.sort(image_files)
-    #verboseprint(image_files)
+    image_files = np.sort(image_files)
+    verboseprint(image_files)
     # go through each image
     image_filename = image_files[0]
     verboseprint(image_filename)
-    #image = Image.open(img_DIR+image_filename)
-    if z_slice:
-        image = io.imread(img_DIR+image_filename)
-        image = image[z_slice,:,:]
-    
-    #width, height = image.size
-        width = image.shape[1]
-        height = image.shape[0]
-    else:
-        image = io.imread(img_DIR+image_filename)
-        print(image.shape)
-        #image = np.moveaxis(image, -1, 0)      #### some images alter before
-        
-        if len(image.shape)==2: #new bit for just dapi images..
-            image = np.expand_dims(image, axis=0)
-         
-        image = image[0,:,:]
-        width = image.shape[1]
-        height = image.shape[0]
-    
+    image = Image.open(img_DIR+image_filename)
+    width, height = image.size
+
     image_info = {'id': image_id,
                   'file_name':image_filename,
                   'height': height,
@@ -183,10 +164,7 @@ def coco_output(ROOT_DIR = None, image_files=None, z_slice=None, output=None):
     #for root, _, files in os.walk(ANNOTATION_DIR):
     #image_segmentation = glob.glob(masks_DIR+'/*'+str.split(image_filename,".")[0]+'_*.png')
     #image_segmentation = glob.glob(masks_DIR+'/*'+image_filename)
-    if z_slice:
-        image_segmentation = masks_DIR+"z"+f"{z_slice:03d}"+"z_"+image_filename
-    else:
-        image_segmentation = masks_DIR+image_filename
+    image_segmentation = masks_DIR+"z"+str(z_slice)+"z_"+image_filename
     image_segmentation = np.asarray(Image.open(image_segmentation)).astype(np.int32)
     nuclei = np.unique(image_segmentation)
     verboseprint(len(nuclei))
