@@ -288,8 +288,61 @@ def graph_stats(G):
     return nuclei
 
 
+def split_nuclei_jac_old(H, masks,i_nuc,graph_par_thres):
+    H2 = H.copy()
+    
+    ord_grad = [ (node1, node2, data['jac_dist']) for node1, node2, data in H.edges(data=True) if 'jac_dist' in data]
+    ord_grad = pd.DataFrame(ord_grad)
+    ord_grad['z1'] = [int(x.split('z')[0]) for x in ord_grad[0]]
+    ord_grad = ord_grad.sort_values(by=['z1'])
+    ord_grad['present']=True
+    
+    for i in range(len(ord_grad)):
+        if ord_grad[2][i]>0.7:   # remove automatically distances above .7
+            H2.remove_edge( ord_grad[0][i], ord_grad[1][i] )
+            ord_grad.loc[ (ord_grad[0]==ord_grad[0][i]) & (ord_grad[1]==ord_grad[1][i]), ('present')   ] = False
+    
+    nuclei_small={0:[]}
+    for i in nx.connected_components(H2.to_undirected()):
+        nuclei_small[ list(nuclei_small.keys())[-1]+1 ] = list(i)
+
+    nuclei_small.pop(0)
+    
+    for i in nuclei_small.keys():
+        if len(nuclei_small[i])> (graph_par_thres+2): #threshold set of +2 z
+            
+            df_extra = ord_grad[ np.asarray(ord_grad[0].isin(nuclei_small[i])) | np.asarray(ord_grad[1].isin(nuclei_small[i] )) ]
+            df_extra = df_extra[df_extra.present==True ]
+
+            df_extra.loc[ df_extra.z1==np.min(df_extra.z1), 'present'] = False
+            df_extra.loc[ df_extra.z1==np.max(df_extra.z1), 'present'] = False
+
+            df_extra = df_extra[df_extra.present==True ]
+
+            if np.max(df_extra[2])<0.2: #this is too low to make sense and prob Jac dist will not help
+                next
+            else:
+                rand_pos= np.random.choice(np.where(df_extra[2] == np.max(df_extra[2]))[0]) # if value is the same per chance choose random
+
+                node1= ord_grad[0][ df_extra.index[ rand_pos] ]
+                node2= ord_grad[1][ df_extra.index[ rand_pos] ]
+                H2.remove_edge( node1, node2)
+                ord_grad.loc[ (ord_grad[0]==node1) & (ord_grad[1]==node2), ('present')   ] = False
+
+    labels_nu1={}
+    ch=0
+    for i in nx.connected_components(H2.to_undirected()):
+        ch=ch+1
+        labels_nu1.setdefault(ch,[]).extend( list(i) )
 
 
+    return labels_nu1
+            
+            
+            
+            
+            
+            
 def split_nuclei_jac(H, masks,i_nuc,graph_par_thres):
     
     #print(i_nuc)
@@ -656,7 +709,7 @@ def get_feature_table(input_img, im, masks_3d):
         return( (input_img, i, vol_nu1, mass_c, nuclear_avgs, hood_avgs, cyto_avgs) )
 
 
-    pool = mp.Pool(20)
+    pool = mp.Pool(15)
     result = pool.map(get_nu_stats, nus)
     
     return result
