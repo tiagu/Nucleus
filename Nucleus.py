@@ -10,6 +10,7 @@ import torch
 from pycocotools.coco import COCO
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
+from skimage import io
 
 print(__name__)
 
@@ -244,18 +245,25 @@ class Stitcher:
 
         # select only good instances from main tiles
         verboseprint(f'The number of main tiles in this image is {len(m_tiles)}')
+        
+        verboseprint(f'self.INPUT_HEIGHT {self.INPUT_HEIGHT}')
+        verboseprint(f'self.INPUT_WIDTH {self.INPUT_WIDTH}')
 
         stitch_borders = torch.zeros((self.INPUT_HEIGHT,self.INPUT_WIDTH))
         for i in range(0,self.INPUT_HEIGHT,self.step):
                 for j in range(0,self.INPUT_WIDTH,self.step):
                     stitch_borders[i:i+self.step, j-margin:j+margin]=1
                     stitch_borders[i-margin:i+margin, j:j+self.step]=1
-                
+              
+        verboseprint(f'len(m_out) {len(m_out)}')
+        verboseprint(f'start LOOOP \n\n\n\n\n')  
         for i in range(0,len(m_out)):
             a=m_out[i].pred_masks
+            verboseprint(f'len(a) {len(a)}')
             for nucleus in range(0, len(a)):
                 x,y = torch.where(a[nucleus]==1)
-                if torch.max(stitch_borders[x+m_tiles[i].coords[0] , y + m_tiles[i].coords[1]])==torch.tensor(0):
+                if x.size() == torch.empty((0)).size(): break #BANDAID... why returning empty with some nuclei of just some images?!
+                if (torch.max(stitch_borders[x + m_tiles[i].coords[0] , y + m_tiles[i].coords[1]])==torch.tensor(0)) :
                     seg_mask[x+m_tiles[i].coords[0] , y + m_tiles[i].coords[1]] = self.nuclei_tally
                     self.nuclei_tally += 1
 
@@ -474,6 +482,79 @@ class coco_nucleus(COCO):
         elif datasetType == 'captions':
             for ann in anns:
                 print(ann['caption'])
+
+
+
+def get_feature_table_2D(input_img, img, masks): 
+    df=[]
+
+
+    nus = np.unique(masks)
+    nus = np.delete(nus, 0)
+
+    for inst in nus:
+        locs = np.where(masks==inst)
+
+        area_px = len(locs[0])
+
+        if len(locs[0])>20: #basic filter for very small detections <20 pixels
+            #channel nuclear averages
+            nuclear_avgs = []
+            for i in range(img.shape[2]):
+                nuclear_avgs.append(round(np.mean(img[locs][i]),3))
+
+            # centroid coordinates in original image.
+            contours,hierarchy = cv2.findContours(np.asarray(masks==inst, dtype='uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if len(contours)==1:
+                cnt = contours[0]
+            else:
+                verboseprint(f'strange mask with >1 contours')
+                verboseprint(f'instance {inst}')
+                xi=0
+                xi_len=len(contours[xi])
+
+                for i in range(len(contours)): 
+                    if len(contours[i])>xi_len:
+                        xi=i
+                        cnt = contours[i]
+            M = cv2.moments(cnt)
+            #print(M)
+            if M['m00']==0:
+                pass
+            else:
+                cx = int(M['m10']/M['m00'])    
+                cy = int(M['m01']/M['m00'])
+                area = cv2.contourArea(cnt)
+                if len(cnt)>5: # ensures there are enough points to call elipse
+                    (x,y),(MA,ma), angle = cv2.fitEllipse(cnt)
+                else:
+                    (x,y),(MA,ma), angle = (np.nan,np.nan),(np.nan,np.nan), np.nan
+
+
+            #get info on hood
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
+            mask_hood = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=15)    
+            #locs = np.where(mask_hood == 1)
+            #channel averages
+            hood_avgs = []
+            for i in range(img.shape[2]):
+                hood_avgs.append(round(np.mean(img[locs][i]),3))
+
+
+            #get info on immediate hood ~ cytoplasm ideally?
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+            mask_cyto = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=5)
+            mask_cyto = mask_cyto - np.asarray(masks==inst, dtype='uint8')   
+            #locs = np.where(mask_cyto == 1)
+            #channel averages
+            cyto_avgs = []
+            for i in range(img.shape[2]):
+                cyto_avgs.append(round(np.mean(img[locs][i]),3))
+
+            df.append( (input_img, inst,nuclear_avgs,area_px , (x,y),(MA,ma), angle, (cx,cy), hood_avgs, cyto_avgs) )
+        
+    return df
+
 
 
 
