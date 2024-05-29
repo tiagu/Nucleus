@@ -1,5 +1,5 @@
 # Nucleus
-Pipeline to detect individual nuclei in crowded immunofluorescence images. Effective in 2D embryo sections and single-z plane images. Additionally, there are range of heuristic tools are available for estimating 3D nuclei in whole-embryo, organoid, or embryo model confocal microscopy stacks.
+Pipeline to detect individual nuclei in crowded immunofluorescence images. Effective in 2D embryo sections and single-z plane images. Additionally, a range of tools are available for estimating 3D nuclei in whole-embryo, organoid, or embryo model confocal microscopy stacks.
 
 <p align="center">
   <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/utils/misc/3d_micropattern.png">
