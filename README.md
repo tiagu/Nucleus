@@ -1,6 +1,10 @@
 # Nucleus
 Pipeline to detect individual nuclei in crowded immunofluorescence images. Effective in 2D embryo sections and single-z plane images. Additionally, there are range of heuristic tools are available for estimating 3D nuclei in whole-embryo, organoid, or embryo model confocal microscopy stacks.
 
+<p align="center">
+  <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/utils/misc/Nucleus-GIF.gif">
+</p>
+
 ## How to
 To detect nuclei in your own image of interest I recommend you first following one of the two example notebooks. 
 
@@ -45,6 +49,10 @@ Distribution of the maximum length of the nuclei in the different datasets.<p al
 
 Make sure you have access to GPU.
 
+Download PyTorch models for Nucleus at
+https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
+
+
 ``` bash
 git clone https://github.com/tiagu/Nucleus/tree/master
 
@@ -68,4 +76,6 @@ For users at The Francis Crick institute, please see [run_nucleus.sh](https://gi
 [2]https://github.com/facebookresearch/detectron2
 
 [3]https://opencv.org/
+
+[4]https://pytorch.org/
 
