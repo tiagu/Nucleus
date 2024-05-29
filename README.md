@@ -8,7 +8,7 @@ Pipeline to detect individual nuclei in crowded immunofluorescence images. Effec
 ## How to
 To detect nuclei in your own image of interest I recommend you first following one of the two example notebooks. 
 
-2D notebook example: [Nucleus_Predict_2D](https://github.com/tiagu/Nucleus/blob/master/notebooks/Nucleus_predict_2D.ipynb?flush_cache=true).
+2D notebook example: [Nucleus_Predict_2D](https://github.com/tiagu/Nucleus/blob/master/notebooks/Nucleus_predict_2D.ipynb?flush_cache=true). Example images [here](https://github.com/tiagu/Nucleus/blob/master/test/2D/masks/zmicropattern_zplane.tif_coco_out.png?flush_cache=true) and [here](https://github.com/tiagu/Nucleus/blob/master/test/2D/masks/zmouse_section.tif_coco_out.png?flush_cache=true).
 
 3D notebook example: [Nucleus_Predict_3D](https://github.com/tiagu/Nucleus/blob/master/notebooks/Nucleus_predict_3D.ipynb?flush_cache=true).
 
