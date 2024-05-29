@@ -23,7 +23,7 @@ Ideally, a 256x256 pixels crop of your images should look similar to the images 
 
 
 ## Data used
-This table shows the main datasets used to train and validate Detectron2. These are available at XXXXXXXXXX.
+This table shows the main datasets used to train and validate our models. These are available at XXXXXXXXXX.
 
 |   | #images  |  #instances | size  | comments  |
 |---|---|---|---|---|
@@ -63,7 +63,9 @@ For users at The Francis Crick institute, please see [run_nucleus.sh](https://gi
 
 ### References
 
-https://scikit-image.org/
-https://github.com/facebookresearch/detectron2
-https://opencv.org/
+[1] https://scikit-image.org/
+
+[2]https://github.com/facebookresearch/detectron2
+
+[3]https://opencv.org/
 

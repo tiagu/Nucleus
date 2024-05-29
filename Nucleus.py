@@ -486,7 +486,9 @@ class coco_nucleus(COCO):
 
 
 def get_feature_table_2D(input_img, img, masks): 
-    df=[]
+    df=[]    
+    
+    # img should be  X, Y, Ch
 
 
     nus = np.unique(masks)
@@ -501,8 +503,8 @@ def get_feature_table_2D(input_img, img, masks):
             #channel nuclear averages
             nuclear_avgs = []
             for i in range(img.shape[2]):
-                nuclear_avgs.append(round(np.mean(img[locs][i]),3))
-
+                nuclear_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
+        
             # centroid coordinates in original image.
             contours,hierarchy = cv2.findContours(np.asarray(masks==inst, dtype='uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours)==1:
@@ -534,22 +536,22 @@ def get_feature_table_2D(input_img, img, masks):
             #get info on hood
             kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
             mask_hood = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=15)    
-            #locs = np.where(mask_hood == 1)
+            locs = np.where(mask_hood == 1)
             #channel averages
             hood_avgs = []
             for i in range(img.shape[2]):
-                hood_avgs.append(round(np.mean(img[locs][i]),3))
+                hood_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
 
 
             #get info on immediate hood ~ cytoplasm ideally?
             kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-            mask_cyto = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=5)
+            mask_cyto = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=3)
             mask_cyto = mask_cyto - np.asarray(masks==inst, dtype='uint8')   
-            #locs = np.where(mask_cyto == 1)
+            locs = np.where(mask_cyto == 1)
             #channel averages
             cyto_avgs = []
             for i in range(img.shape[2]):
-                cyto_avgs.append(round(np.mean(img[locs][i]),3))
+                cyto_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
 
             df.append( (input_img, inst,nuclear_avgs,area_px , (x,y),(MA,ma), angle, (cx,cy), hood_avgs, cyto_avgs) )
         
