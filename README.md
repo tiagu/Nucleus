@@ -18,7 +18,7 @@ Please note, we mostly tested:
 Ideally, a 256x256 pixels crop of your images should look similar to the images the network was trained on. See below some examples.
 
 <p align="center">
-  <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/outputs/misc/Nucleus-GIF.gif">
+  <img width=512 alt="portfolio_view" src="https://github.com/tiagu/Nucleus/blob/master/utils/misc/Nucleus-GIF.gif">
 </p>
 
 
@@ -37,7 +37,7 @@ SC_sections (validation) | 5 | X | 256*256 | Spinal Cord sections
 
 <br/><br/>
 Distribution of the maximum length of the nuclei in the different datasets.<p align="center">
-<img width=420 src="https://github.com/tiagu/Nucleus/blob/master/outputs/misc/Nucleus_data_dimensions.png">
+<img width=420 src="https://github.com/tiagu/Nucleus/blob/master/utils/misc/Nucleus_data_dimensions.png">
 </p>
 
 
