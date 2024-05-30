@@ -54,14 +54,14 @@ https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
 
 
 ``` bash
-git clone https://github.com/tiagu/Nucleus/tree/master
+git clone https://github.com/tiagu/Nucleus
 
 ml Anaconda3/2023.03
-conda env create --name nucleus --file=environments.yml
+conda env create --name nucleus --file=./Nucleus/environments.yml
 source activate nucleus
 
 ml foss
-pip install -r pip_reqs.txt
+pip install -r ./Nucleus/pip_reqs.txt
 python -m pip install detectron2==0.4 -f
 
 ```
