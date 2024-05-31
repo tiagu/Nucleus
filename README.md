@@ -27,7 +27,7 @@ Ideally, a 256x256 pixels crop of your images should look similar to the images 
 
 
 ## Data used
-This table shows the main datasets used to train and validate our models. These are available [here](https://github.com/tiagu/Nucleus/blob/master/utils/misc/Nucleus?flush_cache=true).
+This table shows the main datasets used to train and validate our models. These are available [here](https://github.com/tiagu/Nucleus/blob/master/utils/misc/Nucleus_data.gz?flush_cache=true).
 
 |   | #images  |  #instances | size  | comments  |
 |---|---|---|---|---|
