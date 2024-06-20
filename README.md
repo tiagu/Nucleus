@@ -59,8 +59,9 @@ git clone https://github.com/tiagu/Nucleus
 conda env create --name nucleus --file=./Nucleus/environment.yml
 source activate nucleus
 
+python -m pip install detectron2==0.4 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu101/torch1.8/index.html
 pip install -r ./Nucleus/pip_reqs.txt
-python -m pip install detectron2==0.4 -f
+
 
 ```
 
