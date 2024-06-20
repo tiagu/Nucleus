@@ -1,4 +1,3 @@
-name: nucleus
 channels:
   - pytorch
   - conda-forge
