@@ -47,7 +47,7 @@ Distribution of the maximum length of the nuclei in the different datasets.<p al
 
 ## Instalation
 
-Make sure you have access to GPU.
+Make sure you have access to GPU. Anaconda and foss installed. This package originally used python 3.7.
 
 Download PyTorch models for Nucleus at
 https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
@@ -56,11 +56,9 @@ https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
 ``` bash
 git clone https://github.com/tiagu/Nucleus
 
-ml Anaconda3/2023.03
 conda env create --name nucleus --file=./Nucleus/environments.yml
 source activate nucleus
 
-ml foss
 pip install -r ./Nucleus/pip_reqs.txt
 python -m pip install detectron2==0.4 -f
 
