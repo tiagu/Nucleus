@@ -56,7 +56,7 @@ https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
 ``` bash
 git clone https://github.com/tiagu/Nucleus
 
-conda env create --name nucleus --file=./Nucleus/environments.yml
+conda create --name nucleus --file=./Nucleus/environment.yml
 source activate nucleus
 
 pip install -r ./Nucleus/pip_reqs.txt
