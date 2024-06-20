@@ -143,9 +143,7 @@ dependencies:
       - babel==2.9.0
       - cachetools==4.2.1
       - certifi==2020.12.5
-      - cupy-cuda101==9.6.0
       - cython==0.29.22
-      - detectron2==0.4+cu101
       - faker==8.0.0
       - fastrlock==0.8
       - future==0.18.2
