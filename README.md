@@ -65,7 +65,7 @@ pip install -r ./Nucleus/pip_reqs.txt
 
 ```
 
-For users at The Francis Crick institute, please see [run_nucleus.sh](https://github.com/tiagu/Nucleus/blob/master/utils/run_nucleus.sh?flush_cache=true) bash file for slurm on utils folder.
+For slurm users, please see [run_nucleus.sh](https://github.com/tiagu/Nucleus/blob/master/utils/run_nucleus.sh?flush_cache=true) on utils folder.
 
 
 ### References
