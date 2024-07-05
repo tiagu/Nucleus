@@ -57,11 +57,11 @@ https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
 git clone https://github.com/tiagu/Nucleus
 
 conda env create --name nucleus --file=./Nucleus/environment.yml
-source activate nucleus
+conda activate nucleus
 
 python -m pip install detectron2==0.4 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu101/torch1.8/index.html
-pip install -r ./Nucleus/pip_reqs.txt
 
+pip install --no-cache-dir git+https://github.com/tiagu/Nucleus
 
 ```
 
