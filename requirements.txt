@@ -61,6 +61,6 @@ tqdm==4.66.3
 umap-learn==0.5.1
 webencodings==0.5.1
 werkzeug==3.0.6
-wheel==0.36.2
+wheel==0.38.1
 yacs==0.1.8
 markupsafe==2.0.1
