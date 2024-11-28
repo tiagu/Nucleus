@@ -28,7 +28,7 @@ numba==0.53.1
 numpy==1.20.2
 oauthlib==3.1.0
 omegaconf==2.0.6
-opencv-python==4.5.1.48
+opencv-python==4.8.1.78
 pandas==1.2.3
 pandocfilters==1.4.3
 patsy==0.5.1
