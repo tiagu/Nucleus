@@ -14,7 +14,7 @@ google-auth-oauthlib==0.4.4
 grpcio==1.53.2
 iopath==0.1.8
 ipython-genutils==0.2.0
-joblib==1.0.1
+joblib==1.2.0
 json5==0.9.5
 jupyter-packaging==0.7.12
 jupyter-server==1.5.1
