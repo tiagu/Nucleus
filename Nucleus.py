@@ -408,11 +408,11 @@ def get_feature_table_2D(input_img, img, masks):
     
     # img should be  X, Y, Ch
 
-
     nus = np.unique(masks)
     nus = np.delete(nus, 0)
 
-    for inst in nus:
+    def get_nu_stats(inst):
+
         locs = np.where(masks==inst)
 
         area_px = len(locs[0])
@@ -471,9 +471,12 @@ def get_feature_table_2D(input_img, img, masks):
             for i in range(img.shape[2]):
                 cyto_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
 
-            df.append( (input_img, inst,nuclear_avgs,area_px , (x,y),(MA,ma), angle, (cx,cy), hood_avgs, cyto_avgs) )
-        
-    return df
+            return( (input_img, inst, nuclear_avgs, area_px , (x,y),(MA,ma), angle, (cx,cy), hood_avgs, cyto_avgs) )
+
+    pool = mp.Pool(15)
+    result = pool.map(get_nu_stats, nus)
+
+    return result
 
 
 
