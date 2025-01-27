@@ -56,10 +56,19 @@ https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
 ``` bash
 git clone https://github.com/tiagu/Nucleus
 
-conda create -n nucleus python=3.9 ipython
-conda activate nucleus
+uv venv nucleus-2 --seed --python python3.9
 
-pip install --no-cache-dir git+https://github.com/tiagu/Nucleus
+source nucleus-2/bin/activate
+
+uv pip install torch==1.10 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu113
+
+uv pip install --upgrade pip
+
+# deal with new incompatible versions
+uv pip install Pillow==9.5 jupyterlab
+uv pip install numpy==1.21.6 contourpy matplotlib scikit-image scipy pandas opencv-python tqdm
+
+python -m pip install detectron2==0.6 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html
 
 ```
 
