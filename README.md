@@ -47,7 +47,7 @@ Distribution of the maximum length of the nuclei in the different datasets.<p al
 
 ## Instalation
 
-Make sure you have access to GPU. Anaconda and foss installed. This package uses python 3.9.
+Make sure you have access to GPU. This package uses python 3.9.
 
 Download PyTorch models for Nucleus at
 https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
@@ -56,7 +56,7 @@ https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
 ``` bash
 git clone https://github.com/tiagu/Nucleus
 
-conda env create --name nucleus python=3.9
+conda create -n nucleus python=3.9 ipython
 conda activate nucleus
 
 pip install --no-cache-dir git+https://github.com/tiagu/Nucleus
