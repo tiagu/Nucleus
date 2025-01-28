@@ -7,7 +7,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --output=slurm-nucleus2-%j.out
 
-
+# replace <labname> and <username>
 # submit as sbatch run_nucleus.sh 
 
 ml foss
@@ -15,7 +15,7 @@ ml Anaconda3
 
 pip install uv
 
-uv venv /nemo/lab/briscoej/home/users/ritot/nucleus_t18/nucleus-2 --seed --python python3.9
+uv venv /nemo/lab/<labname>/home/users/<username>/nucleus-2 --seed --python python3.9
 
 source nucleus-2/bin/activate
 
@@ -31,6 +31,6 @@ uv pip install numpy==1.21.6 contourpy matplotlib scikit-image scipy pandas open
 
 python -m pip install detectron2==0.6 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html
 
-unset XDG_RUNTIME_DIR; python -m jupyterlab --ip=$(hostname -I | awk '{print $1}') --port=8000 /camp/home/ritot/home/users/ritot/  | tee jupyter.$(hostname -I | awk '{print $1}').output
+unset XDG_RUNTIME_DIR; python -m jupyterlab --ip=$(hostname -I | awk '{print $1}') --port=8000 /camp/home/  | tee jupyter.$(hostname -I | awk '{print $1}').output
 
 

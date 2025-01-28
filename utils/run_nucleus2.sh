@@ -13,6 +13,6 @@ ml Anaconda3
 
 source nucleus-2/bin/activate
 
-unset XDG_RUNTIME_DIR; python -m jupyterlab --ip=$(hostname -I | awk '{print $1}') --port=8000 /camp/home/ritot/home/users/ritot/  | tee jupyter.$(hostname -I | awk '{print $1}').output
+unset XDG_RUNTIME_DIR; python -m jupyterlab --ip=$(hostname -I | awk '{print $1}') --port=8000 /camp/home/  | tee jupyter.$(hostname -I | awk '{print $1}').output
 
 
