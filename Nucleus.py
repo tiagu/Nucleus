@@ -11,6 +11,13 @@ from pycocotools.coco import COCO
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 from skimage import io
+import multiprocessing as mp
+from functools import partial
+import time
+import itertools
+import networkx as nx
+from scipy import ndimage
+import plotly.express as px
 
 print(__name__)
 
@@ -407,7 +414,7 @@ def get_feature_table_2D(input_img, img, masks):
     df=[]    
     
     # img should be  X, Y, Ch
-
+    global get_nu_stats
     nus = np.unique(masks)
     nus = np.delete(nus, 0)
 
