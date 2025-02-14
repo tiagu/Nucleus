@@ -433,7 +433,7 @@ def get_feature_table_2D(input_img, img, masks):
             contours,hierarchy = cv2.findContours(np.asarray(masks==inst, dtype='uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
             if len(contours)==1:
                 cnt = contours[0]
-            else:
+            elif len(contours)>1:
                 verboseprint(f'strange mask with >1 contours')
                 verboseprint(f'instance {inst}')
                 xi=0
@@ -443,6 +443,8 @@ def get_feature_table_2D(input_img, img, masks):
                     if len(contours[i])>xi_len:
                         xi=i
                         cnt = contours[i]
+            else:
+                pass
             M = cv2.moments(cnt)
             #print(M)
             if M['m00']==0:
