@@ -17,7 +17,6 @@ import time
 import itertools
 import networkx as nx
 from scipy import ndimage
-import plotly.express as px
 
 print(__name__)
 
