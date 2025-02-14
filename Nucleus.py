@@ -12,6 +12,7 @@ from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 from skimage import io
 import multiprocessing as mp
+from multiprocessing.shared_memory import SharedMemory
 from functools import partial
 import time
 import itertools
@@ -409,86 +410,116 @@ class coco_nucleus(COCO):
 
 
 
-def get_feature_table_2D(input_img, img, masks): 
-    df=[]    
+
+
+
+
+
+def get_nu_stats(args):
+    """
+    process each instance.
+    """
+    inst, masks_shm_name, img_shm_name, masks_shape, masks_dtype, img_shape, img_dtype, input_img = args
+
+    masks_shm = SharedMemory(name=masks_shm_name)
+    img_shm = SharedMemory(name=img_shm_name)
+    masks = np.ndarray(masks_shape, dtype=masks_dtype, buffer=masks_shm.buf)
+    img = np.ndarray(img_shape, dtype=img_dtype, buffer=img_shm.buf)
+
+    locs = np.where(masks == inst)
+    area_px = len(locs[0])
     
-    # img should be  X, Y, Ch
-    global get_nu_stats
-    nus = np.unique(masks)
-    nus = np.delete(nus, 0)
-
-    def get_nu_stats(inst):
-
-        locs = np.where(masks==inst)
-
-        area_px = len(locs[0])
-
-        if len(locs[0])>20: #basic filter for very small detections <20 pixels
-            #channel nuclear averages
-            nuclear_avgs = []
-            for i in range(img.shape[2]):
-                nuclear_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
+    if len(locs[0]) > 10:  # Basic filter for very small detections <20 pixels
+        # Channel nuclear averages
+        nuclear_avgs = []
+        for i in range(img.shape[2]):
+            nuclear_avgs.append(round(np.mean(img[locs[0], locs[1], i]), 3))
+    
+        # Centroid coordinates in original image
+        contours, hierarchy = cv2.findContours(np.asarray(masks == inst, dtype='uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         
-            # centroid coordinates in original image.
-            contours,hierarchy = cv2.findContours(np.asarray(masks==inst, dtype='uint8'), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            if len(contours)==1:
-                cnt = contours[0]
-            elif len(contours)>1:
-                verboseprint(f'strange mask with >1 contours')
-                verboseprint(f'instance {inst}')
-                xi=0
-                xi_len=len(contours[xi])
-
-                for i in range(len(contours)): 
-                    if len(contours[i])>xi_len:
-                        xi=i
-                        cnt = contours[i]
-            else:
-                pass
+        # Initialize cnt to avoid UnboundLocalError
+        cnt = None
+        if len(contours) == 1:
+            cnt = contours[0]
+        elif len(contours) > 1:
+            print(f'Strange mask with >1 contours for instance {inst}')
+            xi = 0
+            xi_len = len(contours[xi])
+            for i in range(len(contours)):
+                if len(contours[i]) > xi_len:
+                    xi = i
+                    cnt = contours[i]
+        else:
+            print(f"No contours found for instance {inst}")
+            return None  # Skip this instance
+        
+        if cnt is not None:
             M = cv2.moments(cnt)
-            #print(M)
-            if M['m00']==0:
-                pass
+            if M['m00'] == 0:
+                cx, cy = 0, 0
             else:
-                cx = int(M['m10']/M['m00'])    
-                cy = int(M['m01']/M['m00'])
-                area = cv2.contourArea(cnt)
-                if len(cnt)>5: # ensures there are enough points to call elipse
-                    (x,y),(MA,ma), angle = cv2.fitEllipse(cnt)
-                else:
-                    (x,y),(MA,ma), angle = (np.nan,np.nan),(np.nan,np.nan), np.nan
+                cx = int(M['m10'] / M['m00'])
+                cy = int(M['m01'] / M['m00'])
+            
+            area = cv2.contourArea(cnt)
+            if len(cnt) > 5:  # Ensures there are enough points to call ellipse
+                (x, y), (MA, ma), angle = cv2.fitEllipse(cnt)
+            else:
+                (x, y), (MA, ma), angle = (np.nan, np.nan), (np.nan, np.nan), np.nan
 
-
-            #get info on hood
-            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(5,5))
-            mask_hood = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=15)    
+            # Get info on hood
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+            mask_hood = cv2.dilate(np.asarray(masks == inst, dtype='uint8'), kernel, iterations=15)
             locs = np.where(mask_hood == 1)
-            #channel averages
             hood_avgs = []
             for i in range(img.shape[2]):
-                hood_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
+                hood_avgs.append(round(np.mean(img[locs[0], locs[1], i]), 3))
 
-
-            #get info on immediate hood ~ cytoplasm ideally?
-            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-            mask_cyto = cv2.dilate(np.asarray(masks==inst, dtype='uint8'), kernel, iterations=3)
-            mask_cyto = mask_cyto - np.asarray(masks==inst, dtype='uint8')   
+            # Get info on immediate hood (cytoplasm ideally)
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+            mask_cyto = cv2.dilate(np.asarray(masks == inst, dtype='uint8'), kernel, iterations=3)
+            mask_cyto = mask_cyto - np.asarray(masks == inst, dtype='uint8')
             locs = np.where(mask_cyto == 1)
-            #channel averages
             cyto_avgs = []
             for i in range(img.shape[2]):
-                cyto_avgs.append(   round(  np.mean( img[locs[0],locs[1],i ] )  ,3 ) )
+                cyto_avgs.append(round(np.mean(img[locs[0], locs[1], i]), 3))
 
-            return( (input_img, inst, nuclear_avgs, area_px , (x,y),(MA,ma), angle, (cx,cy), hood_avgs, cyto_avgs) )
+            return (input_img, inst, nuclear_avgs, area_px, (x, y), (MA, ma), angle, (cx, cy), hood_avgs, cyto_avgs)
+    else:
+        print(f"Weird instance {inst} is too small (area_px = {area_px})")
+        return None
 
-    pool = mp.Pool(15)
-    result = pool.map(get_nu_stats, nus)
+def get_feature_table_2D(input_img, img, masks):
+    # shared memory 
+    masks_shm = SharedMemory(create=True, size=masks.nbytes)
+    img_shm = SharedMemory(create=True, size=img.nbytes)
 
+    masks_shared = np.ndarray(masks.shape, dtype=masks.dtype, buffer=masks_shm.buf)
+    img_shared = np.ndarray(img.shape, dtype=img.dtype, buffer=img_shm.buf)
+    np.copyto(masks_shared, masks)
+    np.copyto(img_shared, img)
+
+
+    
+    nus = np.unique(masks)
+    nus = np.delete(nus, 0)  # Remove background (0)
+    
+    inputs = [(inst, masks_shm.name, img_shm.name, masks.shape, masks.dtype, img.shape, img.dtype, input_img) for inst in nus]
+    
+    with mp.Pool(15) as pool:
+        result = pool.map(get_nu_stats, inputs)
+    
+    # Filter out None results (instances that were skipped)
+    #result = [r for r in result if r is not None]
+    
+    # Clean up 
+    masks_shm.close()
+    img_shm.close()
+    masks_shm.unlink()
+    img_shm.unlink()
+    
     return result
-
-
-
-
 
 if __name__ == '__main__':
      main()
