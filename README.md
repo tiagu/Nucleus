@@ -7,7 +7,7 @@ Pipeline to detect individual nuclei in crowded immunofluorescence images. Effec
 
 If you use this repository in your research, please cite:
 
-Rito, T., et al. Timely TGFβ signalling inhibition induces notochord. Nature 637, 673–682 (2025). DOI: [10.1038/s41586-024-08332-w]([https://doi.org/10.1038/s41586-024-08332-w])
+Rito, T. *et al.* Timely TGFβ signalling inhibition induces notochord. Nature 637, 673–682 (2025). DOI: [10.1038/s41586-024-08332-w](https://doi.org/10.1038/s41586-024-08332-w).
 
 ## How to
 Please find installation notes below. To detect nuclei in your own image of interest I recommend you first following one of the two example notebooks. 
