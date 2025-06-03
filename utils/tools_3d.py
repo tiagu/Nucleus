@@ -21,6 +21,8 @@ import itertools
 import networkx as nx
 from scipy import ndimage
 import plotly.express as px
+#import cupy as cp
+from skimage.io import imsave
 
 
 
@@ -556,61 +558,101 @@ def consolidate(G, masks, nuclei, graph_par_thres , hard_cutoff):
 
 
 
+#def make_3d_mat(nuclei, masks):
+#    
+#    id_cols_z=[]
+#    id_cols_id=[]
+#
+#    for i in nuclei.keys():
+#        nu1 = [(np.int64(x[0]),np.int64(x[1])) for x in [x.split('z') for x in nuclei[i]] ]
+#        nu1 = list(zip(*nu1))
+#        id_cols_z.append( list(nu1[0])) 
+#        id_cols_id.append( list( nu1[1])) 
+#
+#    n = len(max(id_cols_z, key=len))
+#    lst_2 = [x + [cp.array([np.nan], dtype=float)]*(n-len(x)) for x in id_cols_z]
+#    id_cols_z = np.array(lst_2)
 
 
-import cupy as cp
+#    n = len(max(id_cols_id, key=len))
+#    lst_2 = [x + [np.nan]*(n-len(x)) for x in id_cols_id]
+#    id_cols_id = np.array(lst_2)
 
 
+#    masks_mat = cp.asarray(masks)
+#    masks_mat_3d = cp.zeros(masks_mat.shape, dtype='uint64')
 
-def make_3d_mat(nuclei, masks):
-    
-    id_cols_z=[]
-    id_cols_id=[]
+#    nucle=cp.asarray(0)
 
-    for i in nuclei.keys():
-        nu1 = [(np.int64(x[0]),np.int64(x[1])) for x in [x.split('z') for x in nuclei[i]] ]
-        nu1 = list(zip(*nu1))
-        id_cols_z.append( list(nu1[0])) 
-        id_cols_id.append( list( nu1[1])) 
+#    nuclei_dic_keys= cp.asarray(np.uint64(list(nuclei.keys())))
+#    cols_z = cp.asarray(np.asarray(id_cols_z, dtype='uint64'))
+#    cols_id = cp.asarray(np.asarray(id_cols_id, dtype='uint64'))
 
-    n = len(max(id_cols_z, key=len))
-    lst_2 = [x + [cp.nan]*(n-len(x)) for x in id_cols_z]
-    id_cols_z = np.array(lst_2)
+#    cp.cuda.Stream.null.synchronize()
 
-
-    n = len(max(id_cols_id, key=len))
-    lst_2 = [x + [np.nan]*(n-len(x)) for x in id_cols_id]
-    id_cols_id = np.array(lst_2)
-
-
-    masks_mat = cp.asarray(masks)
-    masks_mat_3d = cp.zeros(masks_mat.shape, dtype='uint64')
-
-    nucle=cp.asarray(0)
-
-    nuclei_dic_keys= cp.asarray(np.uint64(list(nuclei.keys())))
-    cols_z = cp.asarray(np.asarray(id_cols_z, dtype='uint64'))
-    cols_id = cp.asarray(np.asarray(id_cols_id, dtype='uint64'))
-
-    cp.cuda.Stream.null.synchronize()
-
-    for i in range(len(nuclei_dic_keys)): #which nuclei
-        nucle = nucle+1
-        cols_z_nuc = cols_z[i]
-        cols_id_nuc = cols_id[i]
+#    for i in range(len(nuclei_dic_keys)): #which nuclei
+#        nucle = nucle+1
+#        cols_z_nuc = cols_z[i]
+#        cols_id_nuc = cols_id[i]
         
         #key_to_mask[ nuclei_dic_keys[i] ] = nucle
         
-        for j in range(len(cols_z_nuc)):
-            if cols_z_nuc[j]==cp.nan:
-                break
-            else:
-                masks_mat_3d[cols_z_nuc[j],:,:] = cp.where( masks_mat[cols_z_nuc[j],:,:] == cols_id_nuc[j], nucle, masks_mat_3d[cols_z_nuc[j],:,:]  )
+#        for j in range(len(cols_z_nuc)):
+#            if cols_z_nuc[j]==cp.array([np.nan], dtype=float):
+#                break
+#            else:
+#                masks_mat_3d[cols_z_nuc[j],:,:] = cp.where( masks_mat[cols_z_nuc[j],:,:] == cols_id_nuc[j], nucle, masks_mat_3d[cols_z_nuc[j],:,:]  )
 
-    return masks_mat_3d
+#    return masks_mat_3d
           
 
 
+
+
+
+
+import torch, torchvision
+
+
+
+def make_3d_mat_torch(nuclei, masks):
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+    id_cols_z = []
+    id_cols_id = []
+
+    for i in nuclei.keys():
+        nu1 = [(int(x[0]), int(x[1])) for x in [x.split('z') for x in nuclei[i]]]
+        nu1 = list(zip(*nu1))
+        id_cols_z.append(list(nu1[0]))
+        id_cols_id.append(list(nu1[1]))
+
+    # Padding to max length with NaNs
+    max_len_z = max(len(x) for x in id_cols_z)
+    id_cols_z = [x + [np.nan] * (max_len_z - len(x)) for x in id_cols_z]
+    max_len_id = max(len(x) for x in id_cols_id)
+    id_cols_id = [x + [np.nan] * (max_len_id - len(x)) for x in id_cols_id]
+
+    # Convert to tensors
+    masks_mat = torch.tensor(masks, dtype=torch.long, device=device)
+    masks_mat_3d = torch.zeros_like(masks_mat)
+    cols_z = torch.tensor(id_cols_z, dtype=torch.float32, device=device)
+    cols_id = torch.tensor(id_cols_id, dtype=torch.float32, device=device)
+
+    for i in range(cols_z.shape[0]):
+        nucle = i + 1
+        for j in range(cols_z.shape[1]):
+            z = cols_z[i, j]
+            nid = cols_id[i, j]
+            if torch.isnan(z): break
+
+            z = int(z.item())
+            nid = int(nid.item())
+            slice_mask = masks_mat[z] == nid
+            masks_mat_3d[z] = torch.where(slice_mask, torch.tensor(nucle, device=device), masks_mat_3d[z])
+
+    return masks_mat_3d
+    
 
 
 def get_feature_table(input_img, im, masks_3d):
