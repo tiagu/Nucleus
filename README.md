@@ -54,7 +54,7 @@ Distribution of the maximum length of the nuclei in the different datasets.<p al
 Make sure you have access to GPU. This package uses python 3.9.
 
 Download PyTorch models for Nucleus at
-https://zenodo.org/records/11388472/files/Nucleus_models.gz?download=1
+https://zenodo.org/records/15595710
 
 
 ``` bash
